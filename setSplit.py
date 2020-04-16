@@ -4,15 +4,7 @@ import numpy as np
 from shutil import copyfile
 import pandas as pd
 
-#pd.set_option('display.max_rows', None)
 #%%
-
-root = "UECFOOD100"
-dest = "splitUECFood100"
-train_split = 0.70
-valid_split = 0.20
-# test_split is set to  (1 - train_split - valid_split)
-
 
 def set_split(root, dest, train_split, valid_split):
 
@@ -79,8 +71,8 @@ def set_split(root, dest, train_split, valid_split):
 
 #%%
 
-root = "UECFOOD100"
-dest = "splitUECFood100"
+root = "..//UECFOOD100"
+dest = "..//splitUECFood100"
 train_split = 0.70
 valid_split = 0.20
 # test_split is set to  (1 - train_split - valid_split)
