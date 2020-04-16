@@ -5,9 +5,24 @@ from shutil import copyfile
 import pandas as pd
 from tqdm import tqdm
 
+# %%
+
+def load_categories(root):
+
+    categories_file = 'category.txt'
+
+    # Import categories from category.txt as a list
+    categ_df = pd.read_csv(os.path.join(root, categories_file), sep='\t')
+    categories = list(categ_df.name)
+
+    # Add background as category 0
+    categories.insert(0, 'background')
+    return categories
+
+
 #%%
 
-def set_split(root, dest, train_split, valid_split):
+def set_split(old_root, dest, train_split, valid_split):
 
     bbox_filename = 'bb_info.txt'
 
@@ -16,10 +31,10 @@ def set_split(root, dest, train_split, valid_split):
     df_test = pd.DataFrame()
 
     # For all dirs in the root directory
-    for class_dir in tqdm(os.listdir(root), desc='Copying Files - Spliting to Sets'):
+    for class_dir in tqdm(os.listdir(old_root), desc='Spliting Dataset to Sets'):
 
         # Get the path of each dir
-        class_dir_path = os.path.join(root, class_dir)
+        class_dir_path = os.path.join(old_root, class_dir)
 
         # Ensure that it is a dir and not file
         if os.path.isdir(class_dir_path):
@@ -69,17 +84,3 @@ def set_split(root, dest, train_split, valid_split):
     
     print('\nDone! Saved files to ' + os.path.abspath(dest))
     return bbox_dict
-
-
-#%%
-
-root = "../UECFOOD100"
-dest = "../splitUECFood100"
-train_split = 0.70
-valid_split = 0.20
-# test_split is set to  (1 - train_split - valid_split)
-
-
-bbox = set_split(root, dest, train_split, valid_split)
-
-# %%

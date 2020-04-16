@@ -1,38 +1,20 @@
 # %%
-import os
-import pandas as pd
-from matplotlib import pyplot as plt, patches
+from prepDataset import load_categories, set_split
 
-data_dir = "UECFOOD100"
-bb_file = 'bb_info.txt'
-categories_file = 'category.txt'
-image = []
+old_root = "../UECFOOD100"
 
-categories = pd.read_csv(os.path.join(data_dir,categories_file), sep='\t')
+root = "../splitUECFood100"
+train_split = 0.70
+valid_split = 0.20
+# test_split is set to  (1 - train_split - valid_split)
 
-for class_dir in os.scandir(data_dir):
 
-    if class_dir.is_dir():
-
-        class_dir_path = os.path.join(data_dir, class_dir.name)
-
-        for file in os.scandir(class_dir_path):
-
-            file_path = os.path.join(class_dir_path, file.name)
-
-            if file.name == bb_file: 
-
-                data = pd.read_csv(file_path, delim_whitespace=True)
-                data['category'] = int(class_dir.name)
-
-            elif file.name.endswith(".jpg"):
-
-                image.append(file.name)
-        
-            
-
+classes = load_categories(old_root)
+bbox = set_split(old_root, root, train_split, valid_split)
 
 #%%
+"""
+from matplotlib import pyplot as plt, patches
 
 for i in range(10):
     
@@ -52,47 +34,20 @@ for i in range(10):
     plt.title(categories.loc[file_info.category][0])
     
     plt.show()
-
-
-# %%
-
-import os
-import pandas as pd
-from matplotlib import pyplot as plt, patches
-
-
-def load_categories(data_dir, categories_file):
-
-    # Import categories from categories.txt as a list
-    categ_df = pd.read_csv(os.path.join(data_dir,categories_file), sep='\t')
-    categories = list(categ_df.name)
-
-    # Add background as category 0
-    categories.insert(0, 'background')
-    return categories
-
-
-data_dir = "UECFOOD100"
-categories_file = 'category.txt'
-
-classes = load_categories(data_dir, categories_file)
+"""
 
 # %%
 
-
-
-# %%
-
-import torch
+import torch, os
 from torch import optim, nn, functional as F
 from torch.utils.data import dataloader
 from torchvision import transforms, datasets
 
 def data_loader(root, batch_size):
 
-    train_dir = os.path.join(root, 'train')
-    valid_dir = os.path.join(root, 'valid')
-    test_dir = os.path.join(root, 'test')
+    sets = ['train','valid', 'test']
+
+    dirs = { x : os.path.join(root, x) for x in sets }
 
     # Dictionary with the transformations to be applied in each set
     transform = {
@@ -120,26 +75,14 @@ def data_loader(root, batch_size):
 
     # Load Images
     dataset = {
-        'train': datasets.ImageFolder(train_dir, transform=transform['train']),
-        'valid': datasets.ImageFolder(valid_dir, transform=transform['valid']),
-        'test': datasets.ImageFolder(test_dir, transform=transform['test'])
+        x : datasets.ImageFolder(dirs[x], transform=transform[x]) for x in sets
     }
 
     # Create a Data Loader with a given Batch Size
     data_loader = {
-        'train': dataloader.DataLoader(dataset['train'], batch_size=batch_size),
-        'valid': dataloader.DataLoader(dataset['valid'], batch_size=batch_size),
-        'test': dataloader.DataLoader(dataset['test'], batch_size=batch_size)  
+        x: dataloader.DataLoader(dataset[x], batch_size=batch_size) for x in sets
     }
 
     return data_loader
-
-# %%
-data_dir = "UECFOOD100"
-import os
-for root, dirs, files in os.walk(data_dir):
-    for file in files:
-        if file.endswith(".jpg"):
-             print(files)
 
 # %%
