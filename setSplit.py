@@ -3,6 +3,7 @@ import os
 import numpy as np
 from shutil import copyfile
 import pandas as pd
+from tqdm import tqdm
 
 #%%
 
@@ -15,13 +16,13 @@ def set_split(root, dest, train_split, valid_split):
     df_test = pd.DataFrame()
 
     # For all dirs in the root directory
-    for class_dir in os.listdir(root):
+    for class_dir in tqdm(os.listdir(root), desc='Copying Files - Spliting to Sets'):
 
         # Get the path of each dir
         class_dir_path = os.path.join(root, class_dir)
 
         # Ensure that it is a dir and not file
-        if os.path.isdir(class_dir_path) == True:
+        if os.path.isdir(class_dir_path):
 
             # Calculate number of images in each dir
             dir_size = len([file for file in os.listdir(class_dir_path) if file.endswith(".jpg")])
@@ -65,14 +66,15 @@ def set_split(root, dest, train_split, valid_split):
         'valid': df_valid,
         'test': df_test
     }
-
+    
+    print('\nDone! Saved files to ' + os.path.abspath(dest))
     return bbox_dict
 
 
 #%%
 
-root = "..//UECFOOD100"
-dest = "..//splitUECFood100"
+root = "../UECFOOD100"
+dest = "../splitUECFood100"
 train_split = 0.70
 valid_split = 0.20
 # test_split is set to  (1 - train_split - valid_split)
