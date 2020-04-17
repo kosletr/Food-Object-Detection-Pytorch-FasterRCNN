@@ -1,7 +1,7 @@
 # testing
 Thesis Testing
 
-# Instructions
+# Instructions - Python 3.6.8 (Windows 10 Pro x64)
 
 <b>!! Important - Numpy 1.17 must be installed (not later version) !!</b>
 
@@ -10,9 +10,9 @@ Clone the Repo:
 
 	git clone https://github.com/kosletr/testing/
 
-Install Requirements:
+Install Requirements by opening a terminal and running:
 
-	Run pip install -r requirements.txt
+	pip install -r requirements.txt
   
 Download the UECFOOD100 dataset from http://foodcam.mobi/dataset100.html and extract it.
 
