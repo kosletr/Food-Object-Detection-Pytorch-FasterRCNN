@@ -48,7 +48,7 @@ def set_split(old_root, dest, train_split, valid_split):
 
             # Import BBox Info for each class-dir as a DataFrame
             df = pd.read_csv(os.path.join(class_dir_path, bbox_filename), delim_whitespace=True)
-            df['class'] = int(class_dir) # add a class column
+            df['category'] = int(class_dir) # add a class column
 
             # Shuffle image indices of each dir
             indices = np.unique(df['img'].tolist())
@@ -82,5 +82,57 @@ def set_split(old_root, dest, train_split, valid_split):
         'test': df_test
     }
     
-    print('\nDone! Saved files to ' + os.path.abspath(dest))
+    print('\nDone! Saved files to ' + os.path.abspath(dest) + '\n')
     return bbox_dict
+
+    # %%
+
+def merge_info(root):
+
+    bbox_df = pd.DataFrame()
+    bbox_filename = 'bb_info.txt'
+
+    # For all dirs in the root directory
+    for class_dir in tqdm(os.listdir(root), desc='Merging BBox Info'):
+
+        # Get the path of each dir
+        class_dir_path = os.path.join(root, class_dir)
+
+        # Ensure that it is a dir and not file
+        if os.path.isdir(class_dir_path):
+
+            # Import BBox Info for each class-dir as a DataFrame
+            df = pd.read_csv(os.path.join(class_dir_path, bbox_filename), delim_whitespace=True)
+            df['category'] = int(class_dir) # add a class column
+
+            # Shuffle image indices of each dir
+            indices = np.unique(df['img'].tolist())
+            np.random.shuffle(indices)
+
+            bbox_df = bbox_df.append(df)
+
+
+    print('\nDone!\n')
+    return bbox_df
+
+
+# %%
+
+def convert_dataset(root, dest):
+
+
+    for folder, _, files in tqdm(os.walk(root), desc='Copying files'):
+
+        for file in files:
+
+            if file.endswith('.jpg'):
+                
+                path_file = os.path.join(folder, file)
+                if not os.path.exists(dest):
+                            os.makedirs(dest)
+                     
+                copyfile(path_file, os.path.join(dest, file))
+            else:
+                continue
+
+# %%
