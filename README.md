@@ -14,13 +14,11 @@ Install Requirements:
 
 	Run pip install -r requirements.txt
   
-Download the Dataset:
+Download the UECFOOD100 dataset from http://foodcam.mobi/dataset100.html and extract it.
 
-	Download the UECFOOD100 dataset from http://foodcam.mobi/dataset100.html and extract it
-  
-Run the script to start the training process:
+Open terminal and run the script to start the training process:
 
-	Open terminal and run `python mainObjDet.py`
+	python mainObjDet.py
 
 # Credits
 Credits to pytorch.org tutorial found in here:
