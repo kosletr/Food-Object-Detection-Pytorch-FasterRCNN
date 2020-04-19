@@ -1,21 +1,20 @@
 # Sample code from the TorchVision 0.3 Object Detection Finetuning Tutorial
 # http://pytorch.org/tutorials/intermediate/torchvision_tutorial.html
-# Altered to fit the problem of Food Classification and Object Detection
+# Modified to fit the problem of Food Classification and Object Detection
 # for the UECFOOD100 Dataset
 
 # !!! Numpy 1.17 must be installed !!!
 
 # %%
 
-import os
-# import numpy as np
-import torch
+# Installed Libraries
+import os, torch, torchvision
+import numpy as np
 from PIL import Image
-# import pandas as pd
-
-import torchvision
+import pandas as pd
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 
+# Imported Files
 from engine import train_one_epoch, evaluate
 import utils
 import transforms as T
@@ -74,6 +73,7 @@ class foodDataset(object):
     def __len__(self):
         return len(self.imgs)
 
+# %%
 
 def get_model_object_detection(num_classes):
     # load an instance segmentation model pre-trained pre-trained on COCO
@@ -87,6 +87,7 @@ def get_model_object_detection(num_classes):
 
     return model
 
+# %%
 
 def get_transform(train):
     transforms = []
@@ -95,31 +96,46 @@ def get_transform(train):
         transforms.append(T.RandomHorizontalFlip(0.5))
     return T.Compose(transforms)
 
+# %%
 
 def main():
 
     root = "../UECFOOD100merged"
+    img_dir = "Images"
+
+    # Uncomment the following lines to convert dataset's
+    # folder structure to the appropriate one. 
+    """
     old_root = "../UECFOOD100"
-
-    # Uncomment the following line to convert dataset's
-    # folder structure to the appropriate one. All images should
-    # be located at the same directory (ie. UECFOOD100) without
-    # any subdirs.
-
+    # Copy all images and categories.txt file the a new dir
     convert_dataset(old_root, root)
-
-    categ_labels = load_categories(old_root)
+    # Collect all the bbox information in a dataframe
     bbox_info = merge_info(old_root)
+    # Save the dataframe as a .csv file
+    bbox_info.to_csv(os.path.join(root,'bbox.csv'), index = False)
+    """
+    # All images should be located at the same directory 
+    # (ie. UECFOOD100merged) without any subdirs. The file 
+    # which contains the labels of the various classes, named 
+    # categories.txt, should be coppied to the new root dir 
+    # and a csv file which contains the bbox information should 
+    # also be imported.
 
+    bbox_info = pd.read_csv(os.path.join(root,'bbox.csv'))
+    categ_labels = load_categories(root)
+    
     # train on the GPU or on the CPU, if a GPU is not available
     device = torch.device(
         'cuda') if torch.cuda.is_available() else torch.device('cpu')
 
     # our dataset has two classes only - background and person
     num_classes = len(categ_labels) + 1
+    
+    img_path = os.path.join(root, img_dir)
+
     # use our dataset and defined transformations
-    dataset = foodDataset(root, get_transform(train=True), bbox_info)
-    dataset_test = foodDataset(root, get_transform(train=False), bbox_info)
+    dataset = foodDataset(img_path, get_transform(train=True), bbox_info)
+    dataset_test = foodDataset(img_path, get_transform(train=False), bbox_info)
 
     # split the dataset in train and test set
     indices = torch.randperm(len(dataset)).tolist()
@@ -158,48 +174,77 @@ def main():
             model, optimizer, data_loader, device, epoch, print_freq=10)
         # update the learning rate
         lr_scheduler.step()
-        # save weights
-        torch.save(model.state_dict(), os.path.join('../', 'weights.pt'))
+        # save model
+        torch.save(model, os.path.join('../', 'model.pth'))
         # evaluate on the test dataset
         evaluate(model, data_loader_test, device=device)
-
-    print("That's it!")
 
 
 if __name__ == "__main__":
     main()
 
 # %%
-"""
-from matplotlib import pyplot as plt
+
+# Manually Check Model's Results
+
 from PIL import ImageDraw, Image
+import numpy as np
+import os
+from prepDataset import merge_info
+from torchvision import transforms
 
 
-def get_rect(x1, y1, x2, y2):
+root = '../UECFOOD100merged'
+img_dir = 'Images'
+img_path = os.path.join(root, img_dir)
 
-    width = abs(x2-x1)
-    height = abs(y2-y1)
-    rect = np.array([(0, 0), (width, 0), (width, height), (0, height), (0, 0)])
-    theta = 0
-    R = np.array([[np.cos(theta), -np.sin(theta)],
-                  [np.sin(theta), np.cos(theta)]])
-    offset = np.array([x1, y1])
-    transformed_rect = np.dot(rect, R) + offset
-    return transformed_rect
+model = torch.load("../Food/model.pth")
 
-# pick one image from the test set
-img, _ = dataset_test[0]
-# put the model in evaluation mode
+labels = load_categories(root)
+bbox_info = pd.read_csv(os.path.join(root,'bbox.csv'))
+
+
+dataset = foodDataset(img_path, get_transform(train=True),bbox_info)
+dataset_test = foodDataset(img_path, get_transform(train=False), bbox_info)
+
+indices = torch.randperm(len(dataset)).tolist()
+
+dataset_test = torch.utils.data.Subset(dataset_test, indices[-50:])
+
+data_loader_test = torch.utils.data.DataLoader(dataset_test, batch_size=1, shuffle=False, num_workers=4, collate_fn=utils.collate_fn)
+
+
+# %%
+
+N = 1
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+imag, target = dataset_test[N]
+
 model.eval()
 with torch.no_grad():
-    prediction = model([img.to(device)])
+    prediction = model([imag.to(device)])
 
-imag = Image.fromarray(img.mul(255).permute(1, 2, 0).byte().numpy())
-draw = ImageDraw.Draw(imag)
-rect = get_rect(x1=120, y1=80, x2=100, y2=40)
-draw.polygon([tuple(p) for p in rect], fill=1)
-new_data = np.asarray(imag)
 
-plt.imshow(new_data)
-plt.show()
-"""
+img = transforms.ToPILImage(mode='RGB')(imag)
+
+draw = ImageDraw.Draw(img)
+
+b = prediction[0]['boxes'].cpu().numpy()
+l = prediction[0]['labels'].cpu().numpy()
+s = prediction[0]['scores'].cpu().numpy()
+
+
+for i in range(len(b)):
+    
+    if s[i] > 0.5 :
+        box_loc = list(b[i])
+        draw.rectangle(xy=box_loc)
+        #print('###########')
+        print('{} | Accuracy: {:.2f} %'.format(labels[l[i]], 100*s[i] ))
+
+    #print('{} | Accuracy: {:.2f} %'.format(labels[l[i]], 100*s[i] ))
+
+img
+
+# %%

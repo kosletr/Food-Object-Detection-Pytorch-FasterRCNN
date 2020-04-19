@@ -20,6 +20,14 @@ Open terminal and run the script to start the training process:
 
 	python mainObjDet.py
 
+
+# Example Results
+
+ Rice Example              |  Spinach Example
+:-------------------------:|:-------------------------:
+![](https://github.com/kosletr/testing/blob/master/imgs/pics/Rice.png) |  ![](https://github.com/kosletr/testing/blob/master/imgs/pics/Spinach.png)
+  
+
 # Credits
 Credits to pytorch.org tutorial found in here:
 

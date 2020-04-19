@@ -134,11 +134,20 @@ def merge_info(root):
 
 def convert_dataset(root, dest):
 
+    img_path = os.path.join(dest, 'Images')
+
     for folder, _, files in tqdm(os.walk(root), desc='Copying files'):
 
         for file in files:
 
             if file.endswith('.jpg'):
+
+                path_file = os.path.join(folder, file)
+                if not os.path.exists(img_path):
+                    os.makedirs(img_path)
+
+                copyfile(path_file, os.path.join(img_path, file))
+            elif file == 'category.txt':
 
                 path_file = os.path.join(folder, file)
                 if not os.path.exists(dest):
