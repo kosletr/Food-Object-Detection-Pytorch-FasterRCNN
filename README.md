@@ -23,9 +23,9 @@ Open terminal and run the script to start the training process:
 
 # Example Results
 
- Rice Example              |  Spinach Example
-:-------------------------:|:-------------------------:
-![](https://github.com/kosletr/testing/blob/master/imgs/pics/Rice.png) |  ![](https://github.com/kosletr/testing/blob/master/imgs/pics/Spinach.png)
+![](https://github.com/kosletr/testing/blob/master/imgs/Rice.png) |  
+
+![](https://github.com/kosletr/testing/blob/master/imgs/Spinach.png)
   
 
 # Credits
