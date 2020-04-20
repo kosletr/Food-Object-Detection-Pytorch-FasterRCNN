@@ -23,10 +23,11 @@ Open terminal and run the script to start the training process:
 
 # Example Results
 
-![](https://github.com/kosletr/testing/blob/master/imgs/Rice.png) |  
+![](https://github.com/kosletr/testing/blob/master/imgs/Rice.png) 
 
 ![](https://github.com/kosletr/testing/blob/master/imgs/Spinach.png)
-  
+
+![](https://github.com/kosletr/testing/blob/master/imgs/Multiple.png)
 
 # Credits
 Credits to pytorch.org tutorial found in here:

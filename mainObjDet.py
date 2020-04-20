@@ -198,7 +198,7 @@ root = '../UECFOOD100merged'
 img_dir = 'Images'
 img_path = os.path.join(root, img_dir)
 
-model = torch.load("../Food/model.pth")
+model = torch.load("../model.pth")
 
 labels = load_categories(root)
 bbox_info = pd.read_csv(os.path.join(root,'bbox.csv'))
@@ -215,8 +215,11 @@ data_loader_test = torch.utils.data.DataLoader(dataset_test, batch_size=1, shuff
 
 
 # %%
+from PIL import ImageDraw
+from torchvision import transforms
+import random
 
-N = 1
+N = 14
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 imag, target = dataset_test[N]
@@ -234,17 +237,28 @@ b = prediction[0]['boxes'].cpu().numpy()
 l = prediction[0]['labels'].cpu().numpy()
 s = prediction[0]['scores'].cpu().numpy()
 
+b_real = target['boxes'].cpu().numpy()
+l_real = target['labels'].cpu().numpy()
 
 for i in range(len(b)):
+
+    color = tuple([random.randint(0,255) for _ in range(4)])
     
-    if s[i] > 0.5 :
+    if s[i] > 0.3 :
         box_loc = list(b[i])
-        draw.rectangle(xy=box_loc)
-        #print('###########')
-        print('{} | Accuracy: {:.2f} %'.format(labels[l[i]], 100*s[i] ))
+        draw.rectangle(xy=box_loc, outline = color[0:3])
+        draw.text((box_loc[0],box_loc[1]), 'p: '+labels[l[i]],  fill=color)
+        print(f'pred: {labels[l[i]]} | Accuracy: {100*s[i]:.2f} %')
+"""
+for i in range(len(b_real)):
 
-    #print('{} | Accuracy: {:.2f} %'.format(labels[l[i]], 100*s[i] ))
-
+    color_real = tuple(map(lambda x: x+50, color))
+    box_real = list(b_real[i])
+    draw.rectangle(xy=box_real, outline= color_real[0:3])
+    draw.text((box_real[0],box_real[1]),'r: '+labels[l_real[i]], fill=color_real)
+    print(f'real: {labels[l_real[i]]}')
+"""
 img
+
 
 # %%
