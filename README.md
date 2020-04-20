@@ -23,6 +23,8 @@ Open terminal and run the script to start the training process:
 
 # Example Results
 
+After 10 epochs of training, some of the results produced by the model are shown below:
+
 ![](https://github.com/kosletr/testing/blob/master/imgs/Rice.png) 
 
 ![](https://github.com/kosletr/testing/blob/master/imgs/Spinach.png)
