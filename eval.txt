@@ -1,16 +1,23 @@
-Averaged stats: model_time: 0.1780 (0.1797)  evaluator_time: 0.0060 (0.0087)
+Epoch: [9]  [4436/4437]  eta: 0:00:00  lr: 0.000005  loss: 0.0765 (0.0975)  loss_classifier: 0.0498 (0.0557)  loss_box_reg: 0.0091 (0.0161)  loss_objectness: 0.0003 (0.0016)  loss_rpn_box_reg: 0.0165 (0.0240)  time: 0.3143  data: 0.0056  max mem: 5900
+Epoch: [9] Total time: 0:25:29 (0.3447 s / it)
+creating index...
+index created!
+Test:  [ 0/50]  eta: 0:00:13  model_time: 0.0706 (0.0706)  evaluator_time: 0.0072 (0.0072)  time: 0.2767  data: 0.1958  max mem: 5900
+Test:  [49/50]  eta: 0:00:00  model_time: 0.0680 (0.0701)  evaluator_time: 0.0037 (0.0039)  time: 0.0768  data: 0.0029  max mem: 5900
+Test: Total time: 0:00:04 (0.0832 s / it)
+Averaged stats: model_time: 0.0680 (0.0701)  evaluator_time: 0.0037 (0.0039)
 Accumulating evaluation results...
-DONE (t=0.22s).
+DONE (t=0.16s).
 IoU metric: bbox
- Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.248
- Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.395
- Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.259
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.550
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.767
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.637
  Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
- Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
- Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.253
- Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.316
- Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.327
- Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.327
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.367
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.578
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.568
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.617
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.617
  Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
- Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
- Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.335
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.500
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.629
