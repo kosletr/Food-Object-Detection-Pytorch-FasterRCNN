@@ -1,5 +1,4 @@
-# testing
-Thesis Testing
+# Food-Object-Detection-Pytorch-FasterRCNN
 
 # Instructions - Python 3.6.8 (Windows 10 Pro x64)
 
@@ -35,3 +34,7 @@ After 10 epochs of training, some of the results produced by the model are shown
 Credits to pytorch.org tutorial found in here:
 
 http://pytorch.org/tutorials/intermediate/torchvision_tutorial.html
+
+and the creators of the dataset at:
+
+http://foodcam.mobi/dataset100.html
