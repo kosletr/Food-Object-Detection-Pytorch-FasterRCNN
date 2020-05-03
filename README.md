@@ -9,7 +9,7 @@ This project has been implemented for the purpose of learning and applying the m
 
 Clone the Repo:
 
-	git clone https://github.com/kosletr/testing/
+	git clone https://github.com/kosletr/Food-Object-Detection-Pytorch-FasterRCNN/
 
 Install Requirements by opening a terminal and running:
 
